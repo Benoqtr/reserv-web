@@ -79,4 +79,4 @@ export function formatLocalDateTime(date) {
 // 获取当前北京时间的时间戳
 export function getBeijingTimestamp() {
   return createBeijingDate().getTime();
-} 
+}
