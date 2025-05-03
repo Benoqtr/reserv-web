@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import { toBeijingISOString } from '../../utils/dateUtils';
+import { createBeijingDate } from '../../utils/dateUtils';
 
 const DATA_FILE = path.join(process.cwd(), 'src', 'app', 'data', 'sessions.json');
 
@@ -45,7 +45,7 @@ export async function POST(request) {
     }
 
     const sessions = await readSessions();
-    const timestamp = toBeijingISOString();
+    const timestamp = createBeijingDate().toISOString();
     
     const existingIndex = sessions.findIndex(s => s.id === id);
     if (existingIndex >= 0) {
@@ -97,7 +97,7 @@ export async function PUT(request) {
     
     if (isValid !== undefined) {
       session.isValid = isValid;
-      session.lastChecked = toBeijingISOString();
+      session.lastChecked = createBeijingDate().toISOString();
     }
 
     if (reserveStatus !== undefined) {

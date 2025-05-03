@@ -36,26 +36,13 @@ export function toBeijingISOString(date) {
   return beijingTime.toISOString().replace('Z', '+08:00');
 }
 
-// 解析北京时间的ISO字符串
+// 后端已返回北京时间，直接解析即可
 export function parseBeijingISOString(isoString) {
   if (!isoString) return null;
   
   try {
-    // 如果已经有+08:00，直接解析
-    if (isoString.includes('+08:00')) {
-      return new Date(isoString);
-    }
-    
-    // 如果以Z结尾，替换为+08:00再解析
-    if (isoString.endsWith('Z')) {
-      const beijingIsoString = isoString.replace('Z', '+08:00');
-      return new Date(beijingIsoString);
-    }
-    
-    // 否则假设是UTC时间，转换为北京时间
-    const date = new Date(isoString);
-    const beijingOffset = 8 * 60 * 60 * 1000;
-    return new Date(date.getTime() + beijingOffset);
+    // 直接解析后端返回的北京时间
+    return new Date(isoString);
   } catch (error) {
     console.error('解析北京时间出错:', error);
     return null;

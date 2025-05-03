@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { scheduleReservationTask } from '../services/schedulerService';
-import { createBeijingDate, toBeijingISOString, formatLocalDateTime } from '../../utils/dateUtils';
+import { createBeijingDate, formatLocalDateTime } from '../../utils/dateUtils';
 
 // 计算预约时间
 function calculateReservationTime(targetDate) {
@@ -44,10 +44,10 @@ export async function POST(request) {
       formattedDate.substring(6, 8)
     );
     
-    console.log('解析的目标日期:', toBeijingISOString(targetDate));
+    console.log('解析的目标日期:', targetDate.toISOString());
     
     const reservationTime = calculateReservationTime(targetDate);
-    console.log('计算的预约时间:', toBeijingISOString(reservationTime));
+    console.log('计算的预约时间:', reservationTime.toISOString());
     
     const now = createBeijingDate();
     const timeUntilReservation = reservationTime.getTime() - now.getTime();
@@ -77,7 +77,7 @@ export async function POST(request) {
     // 使用调度服务安排任务
     const jobId = scheduleReservationTask(
       phpSessionId,
-      toBeijingISOString(reservationTime),
+      reservationTime.toISOString(),
       rawDate,
       rawSlots
     );
@@ -88,7 +88,7 @@ export async function POST(request) {
       success: true,
       status: 'waiting',
       info: `等待预约：${rawDate} ${timeSlots}\n预约将在 ${days}天${hours}小时${minutes}分钟${seconds}秒 后自动进行`,
-      scheduledTime: toBeijingISOString(reservationTime),
+      scheduledTime: reservationTime.toISOString(),
       targetDate: rawDate,
       timeSlots: rawSlots,
       scheduledJobId: jobId

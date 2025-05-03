@@ -5,7 +5,7 @@
 import { scheduleJob, cancelJob } from 'node-schedule';
 import fs from 'fs';
 import path from 'path';
-import { createBeijingDate, toBeijingISOString, parseBeijingISOString, formatLocalDateTime } from '../../utils/dateUtils';
+import { createBeijingDate, parseBeijingISOString, formatLocalDateTime } from '../../utils/dateUtils';
 
 // 存储所有活跃的任务
 const activeJobs = new Map();
@@ -19,7 +19,7 @@ function saveTasksToFile() {
     const tasks = Array.from(activeJobs.entries()).map(([id, job]) => ({
       id,
       phpSessionId: job.phpSessionId,
-      scheduledTime: toBeijingISOString(job.scheduledTime),
+      scheduledTime: job.scheduledTime.toISOString(),
       date: job.date,
       slots: job.slots
     }));
@@ -323,7 +323,7 @@ export function getJobStatus(jobId) {
       seconds
     },
     formattedCountdown: `${days}天${hours}小时${minutes}分钟${seconds}秒`,
-    scheduledTime: toBeijingISOString(job.scheduledTime),
+    scheduledTime: job.scheduledTime.toISOString(),
     date: job.date,
     slots: job.slots
   };
